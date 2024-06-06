@@ -3,9 +3,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Appointments from './screens/Appointments';
-import Home from './screens/Home';
-import Profile from './screens/Profile';
+import Appointments from '../screens/Appointments';
+import Home from '../screens/Home';
+import Profile from '../screens/Profile';
 import { Text, View, StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();

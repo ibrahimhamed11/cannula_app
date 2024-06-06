@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform ,I18nManager} from 'react-native';
+import { View, Text, StyleSheet, Platform, I18nManager } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 const CustomPicker = ({
@@ -10,7 +10,12 @@ const CustomPicker = ({
   shouldValidate,
   selectedItem,
   validate, // Validation function prop
-  valideMessage
+  valideMessage,
+  width = '100%', // Custom width prop with default value '100%'
+  height, // Custom height prop
+  labelFontSize = 17, // Default label font size
+  labelColor = '#333', // Default label color
+  labelOpacity = 1, // Default label opacity
 }) => {
   const [error, setError] = useState('');
 
@@ -31,13 +36,15 @@ const CustomPicker = ({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={[styles.pickerContainer, error ? { borderColor: 'red' } : null]}>
+    <View style={[styles.container, { width: width }]}>
+      <Text style={[styles.label, { fontSize: labelFontSize, color: labelColor, opacity: labelOpacity }]}>
+        {label}
+      </Text>
+      <View style={[styles.pickerContainer, error ? { borderColor: 'red' } : null, height && { height }]}>
         <Picker
           selectedValue={value}
           onValueChange={handleChange}
-          style={styles.picker}
+          style={[styles.picker, height && { height }]}
           mode="dropdown"
           dropdownIconColor="#000"
         >
@@ -52,7 +59,6 @@ const CustomPicker = ({
         </Picker>
       </View>
       {error ? <Text style={styles.errorText}>{valideMessage}</Text> : null}
-  
     </View>
   );
 };
@@ -60,27 +66,21 @@ const CustomPicker = ({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
-    width: '100%',
   },
   label: {
     marginBottom: 5,
-    color: '#333',
-    fontSize: 17,
     fontFamily: 'Droid',
-    
   },
   pickerContainer: {
     width: '100%',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#f9f9f9',
     borderRadius: 10,
     borderColor: '#ccc',
-    marginBottom: Platform.OS === 'ios' ? -20 : 0,
-    borderWidth:1
-    
+    borderWidth: 0.5,
   },
   picker: {
     width: '100%',
-    height: 60,
+    height: 60, // Default height
   },
   pickerItem: {
     fontFamily: 'Droid',
@@ -91,12 +91,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: 'Droid',
     textAlign: I18nManager.isRTL ? 'right' : 'left',
-
   },
   errorContainer: {
-    borderColor: 'red', // Set border color to red when error occurs
+    borderColor: 'red',
   },
-
 });
 
 export default CustomPicker;

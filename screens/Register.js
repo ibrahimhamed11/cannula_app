@@ -36,6 +36,7 @@ import {
 import { postDoctorData ,getAllSpecializations,getAllGovernorates,getAllCities ,postProfileImage} from '../api/registerApi';
 
 import CustomModalAlert from '../components/CustomModalAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Register = () => {
@@ -75,11 +76,13 @@ const Register = () => {
     setSuccess(true);
     setModalVisible(true);
   };
-
+  
   const handleError = () => {
     setSuccess(false);
     setModalVisible(true);
   };
+
+
 
   useEffect(() => {
     I18nManager.forceRTL(true);
@@ -247,7 +250,6 @@ const Register = () => {
         availability,
       });
       handlePostData();
-      resetForm();
       setErrors(prevErrors =>
         prevErrors.map(errorObj => ({...errorObj, error: ''})),
       );
@@ -316,19 +318,22 @@ const Register = () => {
       };
   
       const res = await postDoctorData(doctorData);
-      if(res.status==200)
-        {
-          handleSuccess();
+      if (res.status === 200) {
+    const fullPhoneNumber = `+2${mobile}`;
+    await AsyncStorage.setItem('phone', fullPhoneNumber);
+    resetForm();
+    handleSuccess();
+  } else if (res.status === 406) {
 
 
-        }
-        else
-        {
-          handleError();
+    handleError();
+  } else {
+    handleError();
+  }
 
-        }
-      console.log(res);
     } catch (error) {
+      handleError();
+
       console.error('Failed to post doctor data:', error);
     }
   };
@@ -427,9 +432,9 @@ const Register = () => {
         visible={modalVisible}
         setVisible={setModalVisible}
         type={success ? 'success' : 'error'}
-        message={success ? 'تم الرسال طلبك سيتم التواصل معك' : 'حدث خطأ في التسجيل!'}
-        buttonText="الصفحه الرشيسيه"
-        navigationTarget="Main"
+        message={success ? 'تم الرسال طلبك سيتم التواصل معك' : 'البريد او الموبايل مسجل من قبل'}
+        buttonText={success?"الصفحه الرئيسيه":"الرجوع"}
+        navigationTarget={success ? 'OtpScreen' : null}
       />
 
       

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://cannula-doctors.onrender.com/doctor-app';
+const BASE_URL = 'https://cannula-doctors.onrender.com';
 
 
   
@@ -8,8 +8,8 @@ const BASE_URL = 'https://cannula-doctors.onrender.com/doctor-app';
 export const postDoctorData = async (doctorData, channel = 'sms') => {
   try {
 
-    console.log('post data',doctorData)
-    const response = await axios.post(`${BASE_URL}/register/join-request/${channel}`, doctorData);
+    const response = await axios.post(`${BASE_URL}/doctor-app/register/join-request/${channel}`, doctorData);
+
     return response.data;
   } catch (error) {
     console.error('Error posting doctor data:', error);
@@ -20,7 +20,7 @@ export const postDoctorData = async (doctorData, channel = 'sms') => {
 
 export const getAllSpecializations = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/register/specializations`);
+      const response = await axios.get(`${BASE_URL}/doctor-app/register/specializations`);
       return response.data;
     } catch (error) {
       console.error('Error fetching specializations:', error);
@@ -74,7 +74,7 @@ export const getAllSpecializations = async () => {
         name: imageData.fileName,
       });
   
-      const response = await axios.post(`${BASE_URL}/register/upload/profile-image`, formData, {
+      const response = await axios.post(`${BASE_URL}/doctor-app/register/upload/profile-image`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -87,5 +87,64 @@ export const getAllSpecializations = async () => {
         console.error('Response data:', error.response.data);
       }
       throw error;
+    }
+  };
+
+  export const confirmOtp = async (data) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/doctor-app/register/verify`, data);
+      return response;
+    } catch (error) {
+      console.error('Error confirming OTP:', error);
+      return  error.response;
+    }
+  };
+
+
+
+  export const checkDoctorVerification = async (doctorId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/test/check-verified/${doctorId}`);
+      return response;
+    } catch (error) {
+      console.error('Error verifying doctor:', error);
+      return error.response; 
+    }
+  };
+  
+
+  export const postPassword = async (token, password) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/doctor-app/complete-account/set-password`, { password }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      return response;
+    } catch (error) {
+      console.error('Error posting password:', error.message);
+  
+      return  error.response;
+    }
+  };
+
+
+  export const postDoctorPrices = async (pricesData, token) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/doctor-app/complete-account/set-prices`,
+        pricesData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error posting doctor prices:', error);
+      return error.response;
     }
   };

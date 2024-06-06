@@ -11,6 +11,7 @@ const CustomTextInput = ({
   validateOnSubmit,
   fontFamily = 'Droid',
   style,
+  prices,
   ...props
 }) => {
   const [error, setError] = useState('');
@@ -29,13 +30,25 @@ const CustomTextInput = ({
   return (
     <View style={[styles.container, error ? styles.errorContainer : null]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        style={[styles.input, style, { fontFamily: fontFamily, borderColor: error ? 'red' : '#ccc' }]}
-        value={value}
-        onChangeText={onChangeText}
-        onBlur={handleBlur}
-        {...props}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={[
+            styles.input,
+            style,
+            {
+              fontFamily: fontFamily,
+              borderColor: error ? 'red' : '#ccc',
+              opacity: prices ? 0.5 : 1,
+              paddingRight: prices ? 45 : 10, // Add padding to the right to make space for the "ج/م" text
+            },
+          ]}
+          value={value}
+          onChangeText={onChangeText}
+          onBlur={handleBlur}
+          {...props}
+        />
+        {prices && <Text style={styles.priceText}>ج/م</Text>}
+      </View>
       {error ? <Text style={styles.errorText}>{errorMessage || error}</Text> : null}
     </View>
   );
@@ -56,6 +69,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Droid',
     textAlign: 'left',
   },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
   input: {
     height: 60,
     borderWidth: 1,
@@ -64,7 +82,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 17,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
-    width: '100%',
+    flex: 1,
+  },
+  priceText: {
+    position: 'absolute',
+    right: 10,
+    fontSize: 17,
+    fontFamily: 'Droid',
   },
   errorText: {
     color: 'red',

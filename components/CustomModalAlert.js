@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const CustomModalAlert = ({ visible, setVisible, type, iconName, message, buttonText, navigationTarget }) => {
@@ -23,8 +16,13 @@ const CustomModalAlert = ({ visible, setVisible, type, iconName, message, button
   };
 
   const handleNavigate = () => {
+    if (navigationTarget) { 
+  setTimeout(() => {
     navigation.navigate(navigationTarget);
-    handleCloseModal();
+  }, 2000); 
+    } else {
+      handleCloseModal();
+    }
   };
 
   return (
@@ -66,8 +64,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     elevation: 5,
-    width: '90%', 
-
+    width: '90%',
   },
   icon: {
     width: 60,
@@ -79,20 +76,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     fontFamily: 'Droid',
-    
   },
   button: {
     backgroundColor: '#4cb6d3',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    width:'70%'
+    width: '70%',
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontFamily: 'Droid',
-    alignSelf:'center'
+    alignSelf: 'center',
   },
 });
 
